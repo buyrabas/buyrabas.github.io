@@ -54,3 +54,7 @@ nav ul li a:hover {
     color: #000;
     background: #ddd;
 }
+
+input, button {
+    margin-top: 5px;
+}
