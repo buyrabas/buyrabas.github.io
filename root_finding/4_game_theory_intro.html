@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Theory Teaching Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Using Inter font, set in Tailwind config or inline styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a2e; /* Deep purple/blue background */
+            color: #e4e4e7; /* Light text */
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+        }
+        h1, h2, h3 {
+            color: #ff9900; /* Vibrant accent color */
+            font-weight: 700;
+        }
+        .payoff-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: center;
+            width: 100%;
+        }
+        .payoff-table th, .payoff-table td {
+            padding: 1rem 1.5rem;
+            border: 1px solid #3c3c5c;
+            transition: background-color 0.2s;
+        }
+        .payoff-table th {
+            background-color: #2b2b4d;
+            font-weight: 600;
+            color: #ff9900;
+        }
+        .payoff-table td {
+            background-color: #1f1f3a;
+        }
+        .payoff-table tr:hover td {
+             background-color: #2b2b4d;
+        }
+
+        .note, .definition, .example, .shaded {
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+        .note {
+            background-color: #0c4a6e; /* Cyan-blue for Notes */
+            border-left: 5px solid #38bdf8;
+        }
+        .definition {
+            background-color: #3f6212; /* Green for Definitions */
+            border-left: 5px solid #84cc16;
+        }
+        .example {
+            background-color: #4c0519; /* Red/Maroon for Examples */
+            border-left: 5px solid #f87171;
+        }
+        .shaded {
+            background-color: #6d28d9; /* Purple for Worked Examples */
+            border-left: 5px solid #a78bfa;
+            color: white;
+        }
+        /* Custom styles for LaTeX math display */
+        .math-display {
+            display: block;
+            overflow-x: auto;
+            padding: 1rem 0;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace; /* Monospace for LaTeX clarity */
+            color: #60a5fa; /* Light blue for math */
+            background-color: #1a1a2e;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+
+        <!-- Title Block -->
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl mb-2 text-white">Game Theory teaching notes</h1>
+            <p class="text-xl text-gray-400">For Economist Debaters</p>
+            <p class="text-lg text-gray-500">Fall 2024</p>
+        </header>
+
+        <!-- Section 1: Introduction to Game Theory -->
+        <h2 class="text-2xl sm:text-3xl mt-10 mb-4 border-b-2 border-[#ff9900] pb-2">9. Introduction to Game Theory</h2>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">9.1 Intuition and Motivation</h3>
+        <p>
+            Economics is largely about studying human behaviour, and game theory is the branch of economics and mathematics used to study what humans do when they must \textit{interact} with each other.
+        </p>
+
+        <div class="note">
+            <p class="font-bold mb-2">Note</p>
+            <p>
+                Game theory provides a systematic way to model strategic situations: settings in which each participant’s outcome depends not only on their own choices, but also on the choices of others.
+            </p>
+        </div>
+
+        <p>Let’s look at some everyday examples:</p>
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>
+                <strong class="text-[#ff9900]">Roommates cleaning their apartment</strong> — Each person prefers a clean room, but would rather the other person do the cleaning. (This is the \textit{freeloader problem}).
+            </li>
+            <li>
+                <strong class="text-[#ff9900]">Two people competing for the same romantic partner</strong> — Each would like to win, but is only willing to pursue if he believes that he can put in more effort than the other pusuers. (This resembles a \textit{war of attrition}).
+            </li>
+        </ul>
+        <p class="mt-4">In order to study such situations formally, we need to think about what makes up a game.</p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">9.2 Building a Model</h3>
+        <p>The first step is to recognise how many \textbf{players} (actors) are in the interaction. For now, assume there are just two players.</p>
+        <p>Since this is a ``game'' of sorts, we must specify the \textbf{actions} available to each player. Following Osborne’s notation, let $S$ denote the set of actions (or \textbf{strategies}).</p>
+        <p>Suppose each player has three actions available. This already resembles a normal human interaction: each side has multiple possible choices.</p>
+        <p>Now, to evaluate the outcomes of these actions, we need a way to \textbf{measure preferences}. In microeconomics, agents are modeled as maximizing a \textbf{utility function}. The same idea applies here: each player has payoffs that reflect how much they value different outcomes.</p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">9.3 Example Game</h3>
+        <p>Consider the following payoff matrix for a two-player game. Player 1 chooses a row, Player 2 chooses a column, and the entries represent utilities (Player 1 first, Player 2 second):</p>
+
+        <div class="overflow-x-auto my-4">
+            <table class="payoff-table mx-auto text-sm sm:text-base">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="border-b-2">A</th>
+                        <td>(7,5)</td>
+                        <td>(0,3)</td>
+                        <td>(1,0)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">B</th>
+                        <td>(5,-3)</td>
+                        <td>(6,2)</td>
+                        <td>(-2,5)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">C</th>
+                        <td>(3,0)</td>
+                        <td>(2,6)</td>
+                        <td>(-3,1)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="note">
+            <p class="font-bold mb-2">Note</p>
+            <p>
+                The first number in each cell is Player 1's payoff, the second is Player 2's payoff.
+            </p>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">9.4 Formal Definition of a Game</h3>
+        <div class="definition">
+            <p class="font-bold mb-2">Definition</p>
+            <p>A (normal-form) game is defined by the triple</p>
+            <div class="math-display">
+                $$ G = (N, (S_i)_{i \in N}, (u_i)_{i \in N}) $$
+            </div>
+            <p>where:</p>
+            <ul class="list-disc ml-6 space-y-1">
+                <li>$N$ is the set of players,</li>
+                <li>$S_i$ is the set of strategies available to player $i$,</li>
+                <li>$u_i: \prod_{j \in N} S_j \to \mathbb{R}$ is the utility (payoff) function of player $i$.</li>
+            </ul>
+        </div>
+        <p>Note that we are not restricting ourselves to finite sets. The strategy set of a player can be infinite. For example, a firm choosing a price may select any positive real number.</p>
+        <p>In our example, $N = \{1,2\}$, each player has three actions ($S_1 = S_2 = \{A, B, C\}$), and the utility functions $u_1, u_2$ are given by the payoff matrix above.</p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">9.5 Solution Concepts</h3>
+        <p>Having defined a game, the next natural question is:</p>
+        <p class="text-center italic font-semibold my-4">“What will actually happen?”</p>
+        <p>If each player tries to maximize their utility, the answer is not straightforward:</p>
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>There may be no single strategy profile that simultaneously maximizes both players’ utilities.</li>
+            <li>Each player only cares about their own utility, not the other’s. (Although we could model altruism, it complicates the framework and is beyond our current scope.)</li>
+        </ul>
+        <p class="mt-4">The first solution concept we introduce is \textbf{domination}.</p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">9.6 Dominated Strategies</h3>
+        <p>Returning to our example: notice that for Player 1, action $C$ never makes sense. No matter what Player 2 does, Player 1 is better off choosing some other action.</p>
+
+        <div class="definition">
+            <p class="font-bold mb-2">Definition</p>
+            <p>A strategy $s_i \in S_i$ is \textbf{strictly dominated} if there exists another strategy $s'_i \in S_i$ such that</p>
+            <div class="math-display">
+                $$ u_i(s'_i, s_{-i}) > u_i(s_i, s_{-i}) \quad \text{for all } s_{-i} \in S_{-i}. $$
+            </div>
+        </div>
+
+        <div class="note">
+            <p class="font-bold mb-2">Key assumptions when modeling domination:</p>
+            <ol class="list-decimal ml-6 space-y-1">
+                <li>Rational players will not choose strictly dominated strategies.</li>
+                <li>All players are rational.</li>
+                <li>Rationality is \textbf{common knowledge} (everyone knows, everyone knows that everyone knows, and so on).</li>
+            </ol>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">9.7 Iterated Elimination of Strictly Dominated Strategies</h3>
+        <p>If Player 2 knows Player 1 is rational, she can eliminate action $C$ of Player 1 from consideration. After this, Player 2 may realize that her own action $B$ is strictly dominated, and eliminate it as well. This process continues back and forth.</p>
+
+        <div class="shaded">
+            <p class="font-bold mb-2 text-lg">Worked Example: Iterated Elimination</p>
+            <ul class="list-disc ml-6 space-y-1">
+                <li>For Player 1, $C$ is strictly dominated.</li>
+                <li>After $C$ is removed, for Player 2, $B$ is strictly dominated.</li>
+                <li>After $B$ is removed, for Player 1, $B$ is strictly dominated.</li>
+                <li>After this, for Player 2, $C$ is strictly dominated.</li>
+            </ul>
+            <p class="mt-3">This game is solvable by iterated elimination of strictly dominated strategies, and the unique solution is:</p>
+            <p class="text-center font-mono text-xl mt-2">
+                $$(A, A)$$
+            </p>
+        </div>
+
+        <div class="example">
+            <p class="font-bold mb-2">Example</p>
+            <p>The \textbf{Prisoner’s Dilemma} is a famous game solvable by iterated elimination of dominated strategies.</p>
+        </div>
+
+        <div class="example">
+            <p class="font-bold mb-2">Example: Prisoner's Dilemma</p>
+            <p>The \textbf{Prisoner’s Dilemma} is a famous game solvable by iterated elimination of dominated strategies.</p>
+            <p>Consider two prisoners deciding whether to \textit{Confess} (C) or \textit{Stay Silent} (S). The payoff matrix is:</p>
+            <div class="overflow-x-auto my-4">
+                <table class="payoff-table mx-auto text-sm sm:text-base">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Confess (C)</th>
+                            <th>Silent (S)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="border-b-2">Confess (C)</th>
+                            <td>(-5,-5)</td>
+                            <td>(0,-10)</td>
+                        </tr>
+                        <tr>
+                            <th class="border-b-2">Silent (S)</th>
+                            <td>(-10,0)</td>
+                            <td>(-1,-1)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="mt-3">Here, higher numbers are better (less prison time).</p>
+            <div class="note">
+                <p class="font-bold mb-2">Note</p>
+                <p>
+                    The dilemma arises because $(C,C)$ is the outcome predicted by iterated elimination (since confessing strictly dominates staying silent), but this outcome is \textbf{inefficient}: both players would prefer $(S,S)$, which gives them only $-1$ years each instead of $-5$.
+                </p>
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">9.8 Weak Dominance</h3>
+        <p>So far, we have considered only \textbf{strict domination}, where one strategy is always strictly better than another. But sometimes a strategy can be at least as good in all cases, and strictly better in some cases. This leads us to \textbf{weak dominance}.</p>
+
+        <div class="overflow-x-auto my-4">
+            <table class="payoff-table mx-auto text-sm sm:text-base">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>L</th>
+                        <th>M</th>
+                        <th>R</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="border-b-2">U</th>
+                        <td>(2,-8)</td>
+                        <td>(0,0)</td>
+                        <td>(3,1)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">D</th>
+                        <td>(1,-8)</td>
+                        <td>(0,5)</td>
+                        <td>(3,0)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>Here, notice:</p>
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>For Player 1, strategy $D$ is \textbf{weakly dominated} by $U$:
+                $U$ yields a higher payoff when Player 2 plays $L$, and the same payoff when Player 2 plays $M$ or $R$.
+            </li>
+            <li>For Player 2, strategy $L$ is \textbf{strictly dominated} by $M$ and $R$.</li>
+        </ul>
+
+        <div class="definition">
+            <p class="font-bold mb-2">Definition</p>
+            <p>A strategy $s_i \in S_i$ is \textbf{weakly dominated} if there exists another strategy $s'_i \in S_i$ such that</p>
+            <div class="math-display">
+                $$ u_i(s'_i, s_{-i}) \geq u_i(s_i, s_{-i}) \quad \text{for all } s_{-i} \in S_{-i}, $$
+            </div>
+            <p>and</p>
+            <div class="math-display">
+                $$ u_i(s'_i, s_{-i}) > u_i(s_i, s_{-i}) \quad \text{for at least one } s_{-i} \in S_{-i}. $$
+            </div>
+        </div>
+
+        <div class="shaded">
+            <p class="font-bold mb-2 text-lg">Worked Example: Weak Dominance</p>
+            <ol class="list-decimal ml-6 space-y-1">
+                <li>$D$ is weakly dominated by $U$ for Player 1.</li>
+                <li>$L$ is strictly dominated for Player 2 (by $M$ and $R$).</li>
+                <li>If we eliminate $D$ first (for Player 1), then both $L$ and $M$ are dominated for Player 2, leaving $(U,R)$.</li>
+                <li>If we eliminate $L$ first (for Player 2), then we are left with all profiles in $\{U,D\} \times \{M,R\}$.</li>
+            </ol>
+        </div>
+
+        <div class="note">
+            <p class="font-bold mb-2">Note</p>
+            <p>Our fourth assumption is that rational players do \textbf{not} play weakly dominated strategies.</p>
+        </div>
+
+        <!-- Section 2: Nash Equilibrium and Best Responses -->
+        <h2 class="text-2xl sm:text-3xl mt-10 mb-4 border-b-2 border-[#ff9900] pb-2">10. Nash Equilibrium and Best Responses</h2>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">10.1 Example (no dominated strategies)</h3>
+        <p>Consider the following payoff matrix (Player 1 = rows, Player 2 = columns):</p>
+
+        <div class="overflow-x-auto my-4">
+            <table class="payoff-table mx-auto text-sm sm:text-base">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>L</th>
+                        <th>C</th>
+                        <th>R</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="border-b-2">T</th>
+                        <td>(0,6)</td>
+                        <td>(6,0)</td>
+                        <td>(4,3)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">M</th>
+                        <td>(6,0)</td>
+                        <td>(0,6)</td>
+                        <td>(4,3)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">B</th>
+                        <td>(3,3)</td>
+                        <td>(3,3)</td>
+                        <td>(5,5)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>There are no strictly dominated strategies in this game.</p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">10.2 Best Response</h3>
+        <div class="definition">
+            <p class="font-bold mb-2">Definition: Best Response</p>
+            <p>Given a game $G=(N,(S_i),(u_i))$, the \textbf{best response} of player $i$ to a profile of the other players' strategies $s_{-i}\in S_{-i}$ is any strategy $s_i\in S_i$ that maximizes $i$'s payoff holding $s_{-i}$ fixed:</p>
+            <div class="math-display">
+                $$ \mathrm{BR}_i(s_{-i}) \;=\; \arg\max_{s_i\in S_i} u_i(s_i, s_{-i}). $$
+            </div>
+        </div>
+        <div class="definition">
+            <p class="font-bold mb-2">Definition: Best-Response Correspondence</p>
+            <p>The \textbf{best-response correspondence} (or mapping) for player $i$ is the set-valued function $\mathrm{BR}_i: S_{-i}\rightrightarrows S_i$ that assigns to each $s_{-i}$ the set $\mathrm{BR}_i(s_{-i})$ of all best responses.</p>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">10.3 Worked best-response calculations (the example above)</h3>
+        <p>Compute best replies for each player's possible opponent actions:</p>
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>If Player 2 plays \textbf{L}: Player 1's payoffs are $T:0, M:6, B:3$ so $\mathrm{BR}_1(L)=\{M\}$.</li>
+            <li>If Player 2 plays \textbf{C}: Player 1's payoffs are $T:6, M:0, B:3$ so $\mathrm{BR}_1(C)=\{T\}$.</li>
+            <li>If Player 2 plays \textbf{R}: Player 1's payoffs are $T:4, M:4, B:5$ so $\mathrm{BR}_1(R)=\{B\}$.</li>
+            <hr class="my-2 border-gray-600">
+            <li>If Player 1 plays \textbf{T}: Player 2's payoffs are $L:6, C:0, R:3$ so $\mathrm{BR}_2(T)=\{L\}$.</li>
+            <li>If Player 1 plays \textbf{M}: Player 2's payoffs are $L:0, C:6, R:3$ so $\mathrm{BR}_2(M)=\{C\}$.</li>
+            <li>If Player 1 plays \textbf{B}: Player 2's payoffs are $L:3, C:3, R:5$ so $\mathrm{BR}_2(B)=\{R\}$.</li>
+        </ul>
+        <p class="mt-4">Reading off the mutual best replies we find the candidate pairs:</p>
+        <p class="text-center font-mono text-xl">
+            $$(M,L),\ (T,C),\ (B,R).$$
+        </p>
+        <p>Checking mutuality we see only</p>
+        <p class="text-center font-mono text-xl">
+            $$(B,R)$$
+        </p>
+        <p>is mutual: $\mathrm{BR}_1(R)=\{B\}$ and $\mathrm{BR}_2(B)=\{R\}$. Thus $(B,R)$ is a \textbf{pure-strategy Nash equilibrium} and is \emph{stable} in the sense that neither player has a profitable unilateral deviation when the profile is $(B,R)$.</p>
+        <p>The other pairs form a best-response \emph{cycle}:</p>
+        <p class="text-center font-mono text-xl">
+            $$T \xrightarrow{\mathrm{BR}_2} L \xrightarrow{\mathrm{BR}_1} M \xrightarrow{\mathrm{BR}_2} C \xrightarrow{\mathrm{BR}_1} T \cdots$$
+        </p>
+        <p>so they are not self-enforcing.</p>
+
+        <div class="shaded">
+            <p class="font-bold mb-2 text-lg">Observation</p>
+            <p>The pair $(B,R)$ is the unique pure Nash equilibrium. It is the only profile where both players are simultaneously playing best responses to each other, hence no profitable unilateral deviation exists.</p>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">10.4 Formal Definition of Nash Equilibrium</h3>
+        <div class="definition">
+            <p class="font-bold mb-2">Definition: Pure-Strategy Nash Equilibrium</p>
+            <p>A strategy profile $s^\ast=(s^\ast_i)_{i\in N}\in \prod_{i\in N} S_i$ is a \textbf{(pure-strategy) Nash equilibrium} if for every player $i\in N$,</p>
+            <div class="math-display">
+                $$ u_i(s^\ast_i, s^\ast_{-i}) \ge u_i(s_i, s^\ast_{-i}) \quad \text{for all } s_i\in S_i. $$
+            </div>
+            <p>Equivalently,</p>
+            <div class="math-display">
+                $$ s^\ast_i \in \mathrm{BR}_i(s^\ast_{-i}) \quad\text{for every } i. $$
+            </div>
+        </div>
+        <p>Intuition: at a Nash equilibrium no single player can gain by unilaterally changing her strategy.</p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">10.5 Coordination Game (pure-strategy solutions)</h3>
+        <p>A simple pure coordination game (2×2) — players get payoff $1$ if they coordinate on the same action, $0$ otherwise:</p>
+        <div class="overflow-x-auto my-4">
+            <table class="payoff-table mx-auto text-sm sm:text-base">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>L</th>
+                        <th>R</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="border-b-2">L</th>
+                        <td>(1,1)</td>
+                        <td>(0,0)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">R</th>
+                        <td>(0,0)</td>
+                        <td>(1,1)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>Pure Nash equilibria: $(L,L)$ and $(R,R)$.</li>
+            <li>Both are mutual best responses and thus stable; which one is played may depend on pre-play communication, focal points, or history.</li>
+        </ul>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">10.6 Bach & Stravinsky (Battle of the Sexes) — pure-strategy solutions</h3>
+        <p>This is a coordination-with-conflict example. Two players want to go out together but prefer different events. Payoffs often given as:</p>
+        <div class="overflow-x-auto my-4">
+            <table class="payoff-table mx-auto text-sm sm:text-base">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Bach</th>
+                        <th>Stravinsky</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="border-b-2">Bach</th>
+                        <td>(2,1)</td>
+                        <td>(0,0)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">Stravinsky</th>
+                        <td>(0,0)</td>
+                        <td>(1,2)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Interpretation: Player 1 prefers Bach (gets 2 when both choose Bach), Player 2 prefers Stravinsky (gets 2 when both choose Stravinsky), but both prefer coordinating to not coordinating.</p>
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>Pure Nash equilibria: $(\text{Bach},\text{Bach})$ and $(\text{Stravinsky},\text{Stravinsky})$.</li>
+            <li>There is also a mixed-strategy equilibrium (see below), but without mixing the two pure equilibria are the obvious stable outcomes.</li>
+        </ul>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">10.7 Remark on Pure Equilibria</h3>
+        <p>Pure Nash equilibria capture the idea of mutual best responses. Some games (like Matching Pennies) have no pure equilibria and require mixed strategies; others (like coordination or Battle of the Sexes) have multiple pure equilibria and selection arguments are needed to predict which will occur.</p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">10.8 Mixed Strategies: Introduction</h3>
+        <p>Up to now, we have assumed players always choose a single action. Such a choice is called a \textbf{pure strategy}.</p>
+        <p>But what if a player randomizes between their available actions? This leads us to the idea of \textbf{mixed strategies}.</p>
+        <div class="definition">
+            <p class="font-bold mb-2">Definition: Mixed Strategy</p>
+            <p>A mixed strategy for player $i$ is a probability distribution $\sigma_i$ over the set $S_i$ of pure strategies.</p>
+        </div>
+        <p>We denote mixed strategies by $\sigma_i$ and pure strategies by $s_i$.</p>
+        <div class="note">
+            <p class="font-bold mb-2">Note</p>
+            <p>
+                Intuitively, playing a mixed strategy is like being “schizophrenic” — instead of sticking with one choice, you randomize between them.
+            </p>
+        </div>
+
+        <!-- Section 3: Mixed Strategies -->
+        <h2 class="text-2xl sm:text-3xl mt-10 mb-4 border-b-2 border-[#ff9900] pb-2">11. Mixed Strategies</h2>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">11.1 Matching Pennies</h3>
+        <div class="example">
+            <p class="font-bold mb-2">Example: Matching Pennies</p>
+            <p>Two players simultaneously choose Head (H) or Tail (T). If the coins match Player 1 wins $1 (Player 2 loses $1); if they differ Player 2 wins $1 (Player 1 loses $1). The payoff matrix (Player 1 first, Player 2 second) is:</p>
+            <div class="overflow-x-auto my-4">
+                <table class="payoff-table mx-auto text-sm sm:text-base">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>H</th>
+                            <th>T</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="border-b-2">H</th>
+                            <td>(1,-1)</td>
+                            <td>(-1,1)</td>
+                        </tr>
+                        <tr>
+                            <th class="border-b-2">T</th>
+                            <td>(-1,1)</td>
+                            <td>(1,-1)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>There is no pure-strategy Nash equilibrium: any pure strategy is exploited by the opponent and leads to a best-response cycle.</p>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">11.2 The Set of Mixed Strategies</h3>
+        <div class="definition">
+            <p class="font-bold mb-2">Definition: Set of Mixed Strategies</p>
+            <p>For a player $i$ with finite pure strategy set $S_i=\{s_1,\dots,s_k\}$, the \textbf{set of mixed strategies} for player $i$ is</p>
+            <div class="math-display">
+                $$ \Sigma_i \;=\; \Big\{ \sigma_i: S_i\to[0,1]\ \Big|\ \sum_{s\in S_i}\sigma_i(s)=1\Big\}. $$
+            </div>
+            <p>We think of $\sigma_i(s)$ as the probability that player $i$ plays pure strategy $s$.</p>
+        </div>
+
+        <div class="note">
+            <p class="font-bold mb-2">Properties of $\sigma_i$:</p>
+            <ul class="list-disc ml-6 space-y-1">
+                <li>$\sigma_i(s)\ge 0$ for each $s\in S_i$,</li>
+                <li>$\sum_{s\in S_i}\sigma_i(s)=1$,</li>
+                <li>when $|S_i|=k$ the set $\Sigma_i$ is the $(k-1)$-dimensional simplex; if $k=2$ we can describe $\sigma_i$ by a single number $p=\sigma_i(s_1)$ because $\sigma_i(s_2)=1-p$.</li>
+            </ul>
+        </div>
+
+        <h4 class="text-lg sm:text-xl mt-4 mb-2 text-gray-400">Simplex picture (2 actions)</h4>
+        <p>For $S_i=\{H,T\}$ we can identify a mixed strategy by $p=\sigma_i(H)\in[0,1]$. The simplex $\Sigma_i$ is the line segment</p>
+        <p class="text-center font-mono text-lg mt-2 mb-4 text-[#ff9900]">
+            $\sigma_i(H)+\sigma_i(T)=1,\qquad \sigma_i(H),\sigma_i(T)\ge0.$
+        </p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">11.3 Mixed Strategy Profiles and Expected Utility</h3>
+        <div class="definition">
+            <p class="font-bold mb-2">Definition: Mixed Strategy Profile</p>
+            <p>A \textbf{mixed strategy profile} is $\sigma=(\sigma_i)_{i\in N}\in \prod_{i\in N}\Sigma_i$. Denote others' profile by $\sigma_{-i}$.</p>
+        </div>
+
+        <div class="definition">
+            <p class="font-bold mb-2">Definition: Expected Utility</p>
+            <p>The \textbf{expected utility} for player $i$ under profile $\sigma$ is</p>
+            <div class="math-display">
+                $$ U_i(\sigma) \;=\; \sum_{s\in \prod_j S_j} \Big(\prod_{j\in N}\sigma_j(s_j)\Big)\, u_i(s), $$
+            </div>
+            <p>where $s=(s_j)_{j\in N}$ is a pure action profile and $u_i(s)$ is the payoff when pure profile $s$ occurs.</p>
+        </div>
+
+        <div class="note">
+            <p class="font-bold mb-2">Note</p>
+            <p>We assume independence: the mixed strategies of different players are statistically independent, so the probability of pure profile $s$ is $\prod_j\sigma_j(s_j)$.</p>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">11.4 Nash Equilibrium with Mixed Strategies</h3>
+        <div class="definition">
+            <p class="font-bold mb-2">Definition: Mixed-Strategy Nash Equilibrium</p>
+            <p>A mixed strategy profile $\sigma^\ast$ is a \textbf{(mixed-strategy) Nash equilibrium} if for every player $i$,</p>
+            <div class="math-display">
+                $$ U_i(\sigma^\ast_i,\sigma^\ast_{-i}) \;\ge\; U_i(\sigma_i,\sigma^\ast_{-i}) \quad\text{for all }\sigma_i\in\Sigma_i. $$
+            </div>
+            <p>Equivalently, each player's $\sigma^\ast_i$ is a best response (maximizer of expected utility) to $\sigma^\ast_{-i}$.</p>
+        </div>
+
+        <div class="shaded">
+            <p class="font-bold mb-2 text-lg">Characterization due to multi-linearity.</p>
+            <p>A mixed strategy profile $\sigma^\ast$ is a \textbf{(mixed-strategy) Nash equilibrium} if and only if for every player $i$,</p>
+            <div class="math-display">
+                $$ U_i(\sigma^\ast_i,\sigma^\ast_{-i}) \;\ge\; U_i(s_i,\sigma^\ast_{-i}) \quad\text{for all }s_i\in S_i. $$
+            </div>
+            <p>Equivalently, each player's $\sigma^\ast_i$ is a best response (maximizer of expected utility) to $\sigma^\ast_{-i}$.</p>
+        </div>
+
+        <div class="shaded">
+            <p class="font-bold mb-2 text-lg">Nash Existence Theorem (finite games).</p>
+            <p>Every finite game has at least one Nash equilibrium in mixed strategies. (Nash, 1950.)</p>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">11.5 Battle of the Sexes (Bach & Stravinsky) — two computations of the mixed equilibrium</h3>
+        <p>Recall the pure-payoff matrix:</p>
+        <div class="overflow-x-auto my-4">
+            <table class="payoff-table mx-auto text-sm sm:text-base">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Bach (B)</th>
+                        <th>Stravinsky (S)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="border-b-2">Bach (B)</th>
+                        <td>(2,1)</td>
+                        <td>(0,0)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">Stravinsky (S)</th>
+                        <td>(0,0)</td>
+                        <td>(1,2)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Denote $\sigma_1(B)=x$ and $\sigma_2(B)=y$ (so Player 1 plays Bach with probability $x$, Player 2 with probability $y$).</p>
+
+        <h4 class="text-lg sm:text-xl mt-4 mb-2 text-gray-400">Method 1: Best-response correspondence</h4>
+        <p>Compute expected payoffs (Player 1):</p>
+        <p class="text-center font-mono text-lg mt-2 mb-2 text-[#60a5fa]">
+            $$ U_1(B\mid y)=2y + 0(1-y)=2y,\qquad U_1(S\mid y)=0\cdot y + 1(1-y)=1-y. $$
+        </p>
+        <p>Thus Player 1's best response correspondence is</p>
+        <p class="text-center font-mono text-lg mt-2 mb-4 text-[#60a5fa]">
+            $$ \mathrm{BR}_1(y)=
+            \begin{cases}
+            \{B\} & \text{if } y>\tfrac{1}{3},\\[4pt]
+            \{S\} & \text{if } y<\tfrac{1}{3},\\[4pt]
+            \text{any }x\in[0,1] & \text{if } y=\tfrac{1}{3}.
+            \end{cases} $$
+        </p>
+        <p>For Player 2:</p>
+        <p class="text-center font-mono text-lg mt-2 mb-2 text-[#60a5fa]">
+            $$ U_2(B\mid x)=1\cdot x + 0(1-x)=x,\qquad U_2(S\mid x)=0\cdot x + 2(1-x)=2-2x, $$
+        </p>
+        <p>so</p>
+        <p class="text-center font-mono text-lg mt-2 mb-4 text-[#60a5fa]">
+            $$ \mathrm{BR}_2(x)=
+            \begin{cases}
+            \{B\} & \text{if } x>\tfrac{2}{3},\\[4pt]
+            \{S\} & \text{if } x<\tfrac{2}{3},\\[4pt]
+            \text{any }y\in[0,1] & \text{if } x=\tfrac{2}{3}.
+            \end{cases} $$
+        </p>
+        <p>Graphically (in the unit square for $(x,y)$) each BR correspondence is a step function; intersections of the two correspondences give Nash equilibria. The intersections are:</p>
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>Pure equilibria: $(x,y)=(1,1)$ i.e. (B,B) and $(0,0)$ i.e. (S,S).</li>
+            <li>An interior mixed equilibrium at $(x,y)=(\tfrac{2}{3},\tfrac{1}{3})$ where the two step functions meet (Player 1 is indifferent when $y=1/3$, Player 2 is indifferent when $x=2/3$).</li>
+        </ul>
+
+        <h4 class="text-lg sm:text-xl mt-4 mb-2 text-gray-400">Method 2: Indifference principle</h4>
+        <p>Make each player's opponent indifferent between their pure strategies.</p>
+        <p>Player 1 indifferent: $U_1(B\mid y)=U_1(S\mid y)$ gives</p>
+        <p class="text-center font-mono text-lg mt-2 mb-4 text-[#60a5fa]">
+            $$ 2y = 1-y \quad\Rightarrow\quad y=\tfrac{1}{3}. $$
+        </p>
+        <p>Player 2 indifferent: $U_2(B\mid x)=U_2(S\mid x)$ gives</p>
+        <p class="text-center font-mono text-lg mt-2 mb-4 text-[#60a5fa]">
+            $$ x = 2-2x \quad\Rightarrow\quad x=\tfrac{2}{3}. $$
+        </p>
+        <p>Thus the mixed Nash equilibrium is $(x,y)=(\tfrac{2}{3},\tfrac{1}{3})$.</p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">11.6 Worked 2×2 example (indifference calculation)</h3>
+        <p>Consider the game</p>
+        <div class="overflow-x-auto my-4">
+            <table class="payoff-table mx-auto text-sm sm:text-base">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>L</th>
+                        <th>R</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="border-b-2">T</th>
+                        <td>(1,-1)</td>
+                        <td>(0,2)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">B</th>
+                        <td>(0,1)</td>
+                        <td>(2,0)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Let $x$ be the probability Player 1 plays $T$ and $y$ the probability Player 2 plays $L$.</p>
+        <p>Compute expected payoffs for Player 1:</p>
+        <p class="text-center font-mono text-lg mt-2 mb-2 text-[#60a5fa]">
+            $$ U_1(T\mid y)=y, \qquad U_1(B\mid y)=2-2y. $$
+        </p>
+        <p>Indifference for Player 1: $y=2-2y \Rightarrow 3y=2 \Rightarrow y=\tfrac{2}{3}$.</p>
+        <p>Compute expected payoffs for Player 2:</p>
+        <p class="text-center font-mono text-lg mt-2 mb-2 text-[#60a5fa]">
+            $$ U_2(L\mid x)=1-2x, \qquad U_2(R\mid x)=2x. $$
+        </p>
+        <p>Indifference for Player 2: $1-2x = 2x \Rightarrow 1 = 4x \Rightarrow x=\tfrac{1}{4}$.</p>
+        <p class="mt-4">Hence the unique (interior) mixed Nash equilibrium is</p>
+        <p class="text-center font-mono text-xl p-4 bg-gray-700/50 rounded-lg mx-auto w-fit">
+            $$\sigma_1=(x=\tfrac{1}{4}),\qquad \sigma_2=(y=\tfrac{2}{3})$$
+        </p>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">11.7 Miscellaneous remarks</h3>
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>The indifference principle is powerful for 2×2 (and small) games: to compute a mixed equilibrium find probabilities that make opponents indifferent between the pure strategies they mix over.</li>
+            <li>A mixed strategy can sometimes (weakly or strictly) dominate a pure strategy: when the expected payoff from randomization exceeds that of a pure action for every opponent profile.</li>
+            <li>Matching Pennies illustrates why mixed strategies are essential: the only equilibrium is mixed (each player randomizes with $p=\tfrac{1}{2}$).</li>
+        </ul>
+
+        <h3 class="text-xl sm:text-2xl mt-6 mb-3 text-gray-300">11.8 Dominance and Mixed Strategies</h3>
+        <p>Consider the following game:</p>
+        <div class="overflow-x-auto my-4">
+            <table class="payoff-table mx-auto text-sm sm:text-base">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>L</th>
+                        <th>R</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="border-b-2">T</th>
+                        <td>(3,0)</td>
+                        <td>(0,1)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">M</th>
+                        <td>(0,0)</td>
+                        <td>(3,1)</td>
+                    </tr>
+                    <tr>
+                        <th class="border-b-2">B</th>
+                        <td>(1,1)</td>
+                        <td>(1,0)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>There is no pure strategy dominance, but consider mixed strategies.</p>
+        <p>Suppose Row plays the mixed strategy</p>
+        <p class="text-center font-mono text-lg mt-2 mb-2 text-[#60a5fa]">
+            $$ \sigma_R(T)=\tfrac{1}{2},\quad \sigma_R(M)=\tfrac{1}{2},\quad \sigma_R(B)=0, $$
+        </p>
+        <p>and Column plays</p>
+        <p class="text-center font-mono text-lg mt-2 mb-4 text-[#60a5fa]">
+            $$ \sigma_C(L)=y,\quad \sigma_C(R)=1-y. $$
+        </p>
+        <p>Then Row’s expected payoff is</p>
+        <p class="text-center font-mono text-lg mt-2 mb-2 text-[#60a5fa]">
+            $$ U_R(\sigma_R,\sigma_C) \;=\; \tfrac{1}{2}\cdot y\cdot 3 \;+\; \tfrac{1}{2}\cdot (1-y)\cdot 3  = \tfrac{3}{2}(y+1-y)=\tfrac{3}{2}, \quad \forall y\in[0,1]. $$
+        </p>
+        <p>If instead Row plays $B$, then</p>
+        <p class="text-center font-mono text-lg mt-2 mb-4 text-[#60a5fa]">
+            $$ U_R(B,\sigma_C) = 1\cdot y + 1\cdot (1-y) = 1, \quad \forall y\in[0,1]. $$
+        </p>
+        <p>Thus $B$ is \textbf{strictly dominated} by the mixed strategy $\sigma_R=(\tfrac{1}{2},\tfrac{1}{2},0)$.</p>
+
+        <ul class="list-disc ml-6 space-y-2 mt-3">
+            <li>Eliminating $B$ makes $L$ dominated by $R$ for Column.</li>
+            <li>Eliminating $L$ then makes $T$ dominated by $M$ for Row.</li>
+        </ul>
+
+        <div class="shaded">
+            <p class="font-bold mb-2 text-lg">Conclusion on Iterated Elimination</p>
+            <p>The only profile that survives iterated elimination is $(M,R)$.</p>
+        </div>
+
+    </div>
+</body>
+</html>
